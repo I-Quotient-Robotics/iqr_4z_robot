@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>  
+
+  <arg name="model" default="$(find xacro)/xacro.py $(find iqr_4z_description)/urdf/iqr_4z_robot.urdf.xacro" /> 
+
+  <param name="robot_description" command="$(arg model)" /> 
+
+  <!-- MiR100 Setup -->
+  <include file="$(find iqr_4z_bringup)/launch/include/mir.launch.xml">
+    <arg name="mir_hostname"  value="192.168.12.20" />
+    <arg name="enable_scan_filter" value="false" />
+  </include>
+
+  <!-- Universal Robots UR3 Setup -->
+  <include file="$(find iqr_4z_bringup)/launch/include/ur3.launch.xml">
+    <arg name="prefix" value="ur3_arm_" />
+    <arg name="robot_ip" value="192.168.12.210" />
+    <arg name="min_payload" value="0.0" />
+    <arg name="max_payload" value="3.0" />
+  </include>
+
+  <!-- Robotiq 85 Gripper Setup -->
+  <node pkg="robotiq_85_driver" type="robotiq_85_driver" name="robotiq_85_driver" respawn="true" output="screen">
+    <param name="num_grippers" value="1"/>
+    <param name="comport" value="/dev/ROBOTIQ_GRIPPER" />
+    <param name="baud" value="115200" />
+  </node>
+
+	<!-- Robot state publisher -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+</launch>

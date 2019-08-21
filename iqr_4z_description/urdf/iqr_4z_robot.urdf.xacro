@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<robot name="iqr_4z_robot"  xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Include accessories -->
+   <xacro:include filename="$(find mir_description)/urdf/include/mir_100_v1.urdf.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur3.urdf.xacro" />
+  <xacro:include filename="$(find iqr_4z_description)/urdf/iqr_support.urdf.xacro" />
+  <xacro:include filename="$(find iqr_4z_description)/urdf/robotiq_gripper_base.urdf.xacro" />
+  <xacro:include filename="$(find robotiq_85_description)/urdf/robotiq_85_gripper.urdf.xacro" />
+
+  <!-- mir 100 -->
+  <xacro:mir_100 prefix=""/>
+
+  <!-- iqr support -->
+  <xacro:iqr_support parent="surface">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:iqr_support>
+
+  <!-- Universal Robot UR3 -->
+  <xacro:ur3_robot prefix="ur3_arm_" joint_limited="true"/>
+  <joint name="ur3_arm_base" type="fixed">
+    <parent link="support_surface" />
+    <child link="ur3_arm_base_link" />
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 -1.570798" />
+  </joint>
+
+  <!-- TCP link -->
+  <link name="tcp_link"/>
+  <joint name="tcp_link_joint" type="fixed">
+    <origin xyz="0.135 0 0" rpy="0 0 0"/>
+    <parent link="ur3_arm_ee_link"/>
+    <child link="tcp_link"/>
+  </joint>
+
+  <!-- robotiq 85 gripper base -->
+  <xacro:robotiq_gripper_base parent="ur3_arm_ee_link">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:robotiq_gripper_base>
+
+  <!-- robotiq 85 gripper -->
+  <xacro:robotiq_85_gripper prefix="" parent="robotiq_gripper_base_surface">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:robotiq_85_gripper>
+
+</robot>
